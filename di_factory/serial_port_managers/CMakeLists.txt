@@ -1,0 +1,4 @@
+add_library(serial_port_manager INTERFACE)
+target_include_directories(serial_port_manager INTERFACE public)
+
+add_subdirectory(asio_serial_port_manager)

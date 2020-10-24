@@ -1,0 +1,10 @@
+add_library(serial_port_manager_factory INTERFACE)
+target_include_directories(serial_port_manager_factory INTERFACE public)
+target_link_libraries(serial_port_manager_factory INTERFACE serial_port_manager)
+
+add_library(asio_serial_port_manager_factory asio_serial_port_manager_factory/src/AsioSerialPortManagerFactory.cpp)
+target_include_directories(asio_serial_port_manager_factory PUBLIC asio_serial_port_manager_factory/include)
+target_link_libraries(asio_serial_port_manager_factory
+        PUBLIC
+        serial_port_manager_factory
+        virtual_asio_serial_port_manager)
