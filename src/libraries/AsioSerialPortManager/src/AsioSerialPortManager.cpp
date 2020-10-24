@@ -8,7 +8,7 @@ AsioSerialPortManager::AsioSerialPortManager(std::filesystem::path serialDevice,
         asio::serial_port_base::baud_rate(static_cast<unsigned int>(baudRate)));
 }
 
-void AsioSerialPortManager::send(std::string_view message)
+void AsioSerialPortManager::asioWrite(std::string_view message)
 {
     asio::write(mSerialPort, asio::buffer(message));
 }

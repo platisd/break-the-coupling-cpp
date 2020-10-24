@@ -11,7 +11,7 @@ class AsioSerialPortManager
 public:
     AsioSerialPortManager(std::filesystem::path serialDevice, int baudRate);
 
-    void send(std::string_view message);
+    void asioWrite(std::string_view message);
 
 private:
     asio::io_service mIoService;

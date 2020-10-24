@@ -29,10 +29,10 @@ CameraPowerController::CameraPowerController(ProductVariant productVariant)
 
 void CameraPowerController::turnOnCamera()
 {
-    mSerialPortManager->send("ON");
+    mSerialPortManager->asioWrite("ON");
 }
 
 void CameraPowerController::turnOffCamera()
 {
-    mSerialPortManager->send("OFF");
+    mSerialPortManager->asioWrite("OFF");
 }

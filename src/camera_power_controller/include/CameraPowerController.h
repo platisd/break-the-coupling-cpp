@@ -1,5 +1,4 @@
-#ifndef BREAKTHEDEPENDENCY_CAMERAPOWERCONTROLLER_H
-#define BREAKTHEDEPENDENCY_CAMERAPOWERCONTROLLER_H
+#pragma once
 
 #include <memory>
 
@@ -17,4 +16,3 @@ public:
 private:
     std::unique_ptr<AsioSerialPortManager> mSerialPortManager;
 };
-#endif // BREAKTHEDEPENDENCY_CAMERAPOWERCONTROLLER_H
