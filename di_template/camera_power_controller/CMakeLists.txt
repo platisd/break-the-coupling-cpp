@@ -1,0 +1,4 @@
+# CameraPowerController
+add_library(di_template_camera_power_controller INTERFACE)
+
+target_include_directories(di_template_camera_power_controller INTERFACE include)
