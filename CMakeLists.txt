@@ -25,7 +25,7 @@ add_compile_options(
         -Werror
 )
 
-add_subdirectory(original_code)
+add_subdirectory(src)
 add_subdirectory(di_polymorphism)
 add_subdirectory(di_template)
 add_subdirectory(di_factory)
