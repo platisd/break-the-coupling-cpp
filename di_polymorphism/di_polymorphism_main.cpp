@@ -7,9 +7,10 @@
 
 namespace
 {
-std::filesystem::path kSerialDevicePathForVariantA{"/dev/CoolCompanyDevice"};
+const std::filesystem::path kSerialDevicePathForVariantA{
+    "/dev/CoolCompanyDevice"};
 const auto kBaudRateForVariantA = 9600;
-std::filesystem::path kSerialDevicePathForVariantB{"COM3"};
+const std::filesystem::path kSerialDevicePathForVariantB{"COM3"};
 const auto kBaudRateForVariantB = 115200;
 
 std::pair<std::filesystem::path, int>
