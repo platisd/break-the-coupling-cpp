@@ -1,4 +1,5 @@
 add_subdirectory(camera_power_controller)
+add_subdirectory(test)
 
 # camera_control_main
 add_executable(di_template_main di_template_main.cpp)

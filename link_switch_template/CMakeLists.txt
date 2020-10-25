@@ -1,4 +1,5 @@
 add_subdirectory(camera_power_controller)
+add_subdirectory(test)
 
 # src_main
 add_executable(link_switch_template_main link_switch_template_main.cpp)

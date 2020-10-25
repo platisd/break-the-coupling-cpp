@@ -25,11 +25,11 @@ add_compile_options(
         -Werror
 )
 
+add_subdirectory(external)
+
 add_subdirectory(src)
 add_subdirectory(di_polymorphism)
 add_subdirectory(di_template)
 add_subdirectory(di_factory)
 add_subdirectory(link_switch)
 add_subdirectory(link_switch_template)
-add_subdirectory(test)
-add_subdirectory(external)
