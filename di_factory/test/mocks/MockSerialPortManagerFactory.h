@@ -8,9 +8,10 @@
 class MockSerialPortManagerFactory : public SerialPortManagerFactory
 {
 public:
-    MOCK_CONST_METHOD2(get,
-                       std::unique_ptr<SerialPortManager>(
-                           std::filesystem::path serialDevice, int baudRate));
+    MOCK_METHOD(std::unique_ptr<SerialPortManager>,
+                get,
+                (std::filesystem::path serialDevice, int baudRate),
+                (const, override));
 };
 
 #endif // BREAKTHEDEPENDENCY_MOCKSERIALPORTMANAGERFACTORY_H

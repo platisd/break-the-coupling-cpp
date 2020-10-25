@@ -7,7 +7,7 @@
 class MockSerialPortManager : public SerialPortManager
 {
 public:
-    MOCK_METHOD1(asioWrite, void(std::string_view message));
+    MOCK_METHOD(void, asioWrite, (std::string_view message), (override));
 };
 
 #endif // BREAKTHEDEPENDENCY_MOCKSERIALPORTMANAGER_H
