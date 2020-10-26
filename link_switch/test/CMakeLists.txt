@@ -1,10 +1,18 @@
 # ========= Unit test configurations =========
 set(mocks ${CMAKE_CURRENT_SOURCE_DIR}/mocks)
 
-# DummyTest
-#add_executable(dummy_test ${unit_tests}/DummyTest.cpp)
-#target_include_directories(dummy_test PUBLIC
-#        ${include_dir}
-#        ${mocks})
-#target_link_libraries(dummy_test libdummy)
-#configure_test(dummy_test)
+# MockAsioSerialPortManager
+add_library(mock_asio_serial_port_manager mocks/AsioSerialPortManager.cpp)
+target_link_libraries(mock_asio_serial_port_manager
+        PUBLIC
+        asio_serial_port_manager
+        gmock)
+
+# LinkSwitchCameraPowerControllerTest
+add_executable(link_switch_camera_power_controller_test LinkSwitchCameraPowerControllerTest.cpp)
+target_include_directories(link_switch_camera_power_controller_test PUBLIC
+        ${mocks})
+target_link_libraries(link_switch_camera_power_controller_test
+        link_switch_camera_power_controller
+        mock_asio_serial_port_manager)
+configure_test(link_switch_camera_power_controller_test)
