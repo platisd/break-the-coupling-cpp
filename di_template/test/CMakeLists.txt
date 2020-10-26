@@ -1,4 +1,4 @@
-# ========= Unit test configurations =========
+
 # DiTemplateCameraPowerControllerTest
 add_executable(di_template_camera_power_controller_test DiTemplateCameraPowerControllerTest.cpp)
 target_link_libraries(di_template_camera_power_controller_test di_template_camera_power_controller)

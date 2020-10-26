@@ -1,4 +1,3 @@
-# ========= Unit test configurations =========
 set(mocks ${CMAKE_CURRENT_SOURCE_DIR}/mocks)
 
 # MockAsioSerialPortManager
