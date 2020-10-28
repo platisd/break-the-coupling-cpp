@@ -20,14 +20,14 @@ refactored example you will find the unit tests that accompany it.
   - [CameraPowerController.cpp](#camerapowercontrollercpp)
 - [Dependency Injection (Polymorphic)](#dependency-injection-polymorphic)
   - [SerialPortAdapter.h](#serialportadapterh)
-  - [AsioSerialPortAdapter header & [implementation](di_polymorphism/serial_port_adapters/asio_serial_port_adapter/src/AsioSerialPortAdapter.cpp)](#asioserialportadapter-header--implementation)
+  - [AsioSerialPortAdapter](#asioserialportadapter)
   - [CameraPowerController.h](#camerapowercontrollerh-1)
   - [di_polymorphism_main.cpp](#di_polymorphism_maincpp)
 - [Dependency Injection (Templatized)](#dependency-injection-templatized)
   - [CameraPowerController.h](#camerapowercontrollerh-2)
 - [Dependency Injection (Abstract factory)](#dependency-injection-abstract-factory)
   - [AsioSerialPortManager.h](#asioserialportmanagerh)
-  - [AsioSerialPortManagerFactory header & [implementation](di_factory/serial_port_manager_factories/asio_serial_port_manager_factory/src/AsioSerialPortManagerFactory.cpp)](#asioserialportmanagerfactory-header--implementation)
+  - [AsioSerialPortManagerFactory](#asioserialportmanagerfactory)
   - [CameraPowerController.cpp](#camerapowercontrollercpp-1)
 - [Link time switching](#link-time-switching)
   - [Coupled configuration](#coupled-configuration)
@@ -131,7 +131,7 @@ struct SerialPortAdapter
 };
 ```
 
-### AsioSerialPortAdapter [header](di_polymorphism/serial_port_adapters/asio_serial_port_adapter/include/AsioSerialPortAdapter.h) & [implementation](di_polymorphism/serial_port_adapters/asio_serial_port_adapter/src/AsioSerialPortAdapter.cpp)
+### [AsioSerialPortAdapter](di_polymorphism/serial_port_adapters/asio_serial_port_adapter)
 
 Then we have the `AsioSerialPortAdapter` concrete class that inherits from `SerialPortAdapter` and exposes
 the `AsioSerialPortManager` in a generic manner.
@@ -309,7 +309,7 @@ private:
 
 `SerialPortManager` is a pure abstract class that generalizes `AsioSerialPortManager`.
 
-### AsioSerialPortManagerFactory [header](di_factory/serial_port_manager_factories/asio_serial_port_manager_factory/include/AsioSerialPortManagerFactory.h) & [implementation](di_factory/serial_port_manager_factories/asio_serial_port_manager_factory/src/AsioSerialPortManagerFactory.cpp)
+### [AsioSerialPortManagerFactory](di_factory/serial_port_manager_factories/asio_serial_port_manager_factory)
 
 The `SerialPortManagerFactory` pure abstract class "promises" its children to return a child/specialization of the (also abstract) `SerialPortManager`.
 
