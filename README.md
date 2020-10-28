@@ -1,4 +1,4 @@
-# Break the coupling (in C++)
+# Break the coupling (in C++) ![Examples CI](https://github.com/platisd/break-the-coupling-cpp/workflows/Examples%20CI/badge.svg?branch=master)
 
 Implementations tightly coupled to their dependencies are difficult to maintain,
 reuse and test.
