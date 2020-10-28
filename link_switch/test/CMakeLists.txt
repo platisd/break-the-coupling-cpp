@@ -7,6 +7,8 @@ target_link_libraries(mock_asio_serial_port_manager
         PUBLIC
         asio_serial_port_manager_interface
         gmock)
+# Gmock doesn't play nice with CLang so we need to disable a warning
+target_compile_options(mock_asio_serial_port_manager PRIVATE -Wno-gnu-zero-variadic-macro-arguments)
 
 # LinkSwitchCameraPowerControllerTest
 add_executable(link_switch_camera_power_controller_test LinkSwitchCameraPowerControllerTest.cpp)
