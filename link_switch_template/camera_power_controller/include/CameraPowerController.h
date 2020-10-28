@@ -1,8 +1,8 @@
 #pragma once
 
 #include <memory>
+#include <filesystem>
 
-#include "AsioSerialPortManager.h"
 #include "ProductVariant.h"
 
 template<typename SerialPortManager>
@@ -18,7 +18,7 @@ public:
             const std::filesystem::path kSerialDevicePathForVariantA{
                 "/dev/CoolCompanyDevice"};
             const auto kBaudRateForVariantA = 9600;
-            mSerialPortManager = std::make_unique<AsioSerialPortManager>(
+            mSerialPortManager = std::make_unique<SerialPortManager>(
                 kSerialDevicePathForVariantA, kBaudRateForVariantA);
         }
             return;
@@ -26,7 +26,7 @@ public:
         {
             const std::filesystem::path kSerialDevicePathForVariantB{"COM3"};
             const auto kBaudRateForVariantB = 115200;
-            mSerialPortManager = std::make_unique<AsioSerialPortManager>(
+            mSerialPortManager = std::make_unique<SerialPortManager>(
                 kSerialDevicePathForVariantB, kBaudRateForVariantB);
         }
             return;
