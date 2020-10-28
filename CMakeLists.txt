@@ -26,8 +26,9 @@ add_compile_options(
 )
 
 add_subdirectory(external)
-
 add_subdirectory(src)
+
+enable_testing()
 add_subdirectory(di_polymorphism)
 add_subdirectory(di_template)
 add_subdirectory(di_factory)
