@@ -15,6 +15,26 @@ is often also very important. Being decoupled on the code level but not in the
 CMake/Bazel/Blueprint files will not get you very far. Last but not least, for every
 refactored example you will find the unit tests that accompany it.
 
+- [Tightly coupled code example](#tightly-coupled-code-example)
+  - [CameraPowerController.h](#camerapowercontrollerh)
+  - [CameraPowerController.cpp](#camerapowercontrollercpp)
+- [Dependency Injection (Polymorphic)](#dependency-injection-polymorphic)
+  - [SerialPortAdapter.h](#serialportadapterh)
+  - [AsioSerialPortAdapter header & [implementation](di_polymorphism/serial_port_adapters/asio_serial_port_adapter/src/AsioSerialPortAdapter.cpp)](#asioserialportadapter-header--implementation)
+  - [CameraPowerController.h](#camerapowercontrollerh-1)
+  - [di_polymorphism_main.cpp](#di_polymorphism_maincpp)
+- [Dependency Injection (Templatized)](#dependency-injection-templatized)
+  - [CameraPowerController.h](#camerapowercontrollerh-2)
+- [Dependency Injection (Abstract factory)](#dependency-injection-abstract-factory)
+  - [AsioSerialPortManager.h](#asioserialportmanagerh)
+  - [AsioSerialPortManagerFactory header & [implementation](di_factory/serial_port_manager_factories/asio_serial_port_manager_factory/src/AsioSerialPortManagerFactory.cpp)](#asioserialportmanagerfactory-header--implementation)
+  - [CameraPowerController.cpp](#camerapowercontrollercpp-1)
+- [Link time switching](#link-time-switching)
+  - [Coupled configuration](#coupled-configuration)
+  - [Decoupled configuration](#decoupled-configuration)
+- [Link time switching (Templatized)](#link-time-switching-templatized)
+  - [CameraPowerController.h](#camerapowercontrollerh-3)
+
 ## Tightly coupled code example
 
 Here is some typical code that is coupled with its dependencies.
