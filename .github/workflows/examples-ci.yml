@@ -1,0 +1,35 @@
+name: Examples CI
+
+on: [push]
+
+jobs:
+
+  build-examples:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        compiler:
+          - cc: gcc-9
+            cxx: g++-9
+          - cc: clang-9
+            cxx: clang++-9
+    env:
+      CC: ${{ matrix.compiler.cc }}
+      CXX: ${{ matrix.compiler.cxx }}
+      build_dir: build
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get dependencies
+        run: |
+          sudo apt-get install -y ${{ matrix.compiler.cc }}
+          sudo apt-get install -y ${{ matrix.compiler.cxx }}
+          sudo apt-get install -y libcurl4-openssl-dev
+      - name: Create examples build directory
+        run: mkdir -p ${build_dir}
+      - name: Configure examples
+        run: cd ${build_dir} && cmake ..
+      - name: Build examples
+        run: cmake --build ${build_dir} -- -j$(nproc)
+      - name: Run unit tests
+        run: cd ${build_dir}/test && ctest
