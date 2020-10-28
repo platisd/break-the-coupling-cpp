@@ -14,5 +14,5 @@ public:
     void turnOffCamera();
 
 private:
-    std::unique_ptr<AsioSerialPortManager> mSerialPortManager;
+    std::unique_ptr<AsioSerialPortManager> mAsioSerialPortManager;
 };

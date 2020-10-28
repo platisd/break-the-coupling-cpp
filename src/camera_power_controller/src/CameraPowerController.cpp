@@ -16,11 +16,11 @@ CameraPowerController::CameraPowerController(ProductVariant productVariant)
     switch (productVariant)
     {
     case ProductVariant::A:
-        mSerialPortManager = std::make_unique<AsioSerialPortManager>(
+        mAsioSerialPortManager = std::make_unique<AsioSerialPortManager>(
             kSerialDevicePathForVariantA, kBaudRateForVariantA);
         return;
     case ProductVariant::B:
-        mSerialPortManager = std::make_unique<AsioSerialPortManager>(
+        mAsioSerialPortManager = std::make_unique<AsioSerialPortManager>(
             kSerialDevicePathForVariantB, kBaudRateForVariantB);
         return;
     default:
@@ -30,10 +30,10 @@ CameraPowerController::CameraPowerController(ProductVariant productVariant)
 
 void CameraPowerController::turnOnCamera()
 {
-    mSerialPortManager->asioWrite("ON");
+    mAsioSerialPortManager->asioWrite("ON");
 }
 
 void CameraPowerController::turnOffCamera()
 {
-    mSerialPortManager->asioWrite("OFF");
+    mAsioSerialPortManager->asioWrite("OFF");
 }
