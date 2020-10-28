@@ -2,6 +2,8 @@
 #define BREAKTHEDEPENDENCY_MOCKASIOSERIALPORTMANAGER_H
 
 #include "gmock/gmock.h"
+#include <filesystem>
+#include <string_view>
 
 struct MockAsioSerialPortManager
 {
