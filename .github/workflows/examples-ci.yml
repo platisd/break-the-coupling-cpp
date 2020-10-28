@@ -32,4 +32,4 @@ jobs:
       - name: Build examples
         run: cmake --build ${build_dir} -- -j$(nproc)
       - name: Run unit tests
-        run: cd ${build_dir}/test && ctest
+        run: cd ${build_dir} && ctest
