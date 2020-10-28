@@ -239,6 +239,226 @@ it should be noted that yet again we have moved the configuration of the serial 
 
 ## Dependency Injection (Abstract factory)
 
+If there are really good reasons to give a class control over (some of) its resources then it may not be possible to
+instantiate its dependencies in the integration scope (e.g. a `main()` function) because they require some information
+that resides within the class that uses them.
+
+A good exmaple is the *original* `CameraPowerController` constructor:
+
+```cpp
+CameraPowerController::CameraPowerController(ProductVariant productVariant)
+{
+    switch (productVariant)
+    {
+    case ProductVariant::A:
+        mSerialPortManager = std::make_unique<AsioSerialPortManager>(
+            kSerialDevicePathForVariantA, kBaudRateForVariantA);
+        return;
+    case ProductVariant::B:
+        mSerialPortManager = std::make_unique<AsioSerialPortManager>(
+            kSerialDevicePathForVariantB, kBaudRateForVariantB);
+        return;
+    default:
+        throw std::logic_error("Unknown variant");
+    }
+}
+```
+`AsioSerialPortManager` requires two arguments to be passed to its constructor that are owned by the class that
+uses it. To be honest with you, I consider this a design smell. However, if you are really convinced something like this
+makes sense, then you can inject an abstract factory class to keep your implementation decoupled from its dependencies.
+
+The abstract factory class takes the arguments that would have otherwise been supplied to the concrete class' constructor
+and returns an instance of the concrete class. The "trick" is that our class depends on an abstraction returned by the
+factory function call, not a particular implementation.
+
+### [AsioSerialPortManager.h](di_factory/serial_port_managers/asio_serial_port_manager/include/AsioSerialPortManager.h)
+
+```cpp
+class AsioSerialPortManager : public SerialPortManager
+{
+public:
+    AsioSerialPortManager(std::filesystem::path serialDevice, int baudRate);
+
+    void asioWrite(std::string_view message) override;
+
+private:
+    asio::io_service mIoService;
+    asio::serial_port mSerialPort{mIoService};
+};
+```
+
+`SerialPortManager` is a pure abstract class that generalizes `AsioSerialPortManager`.
+
+### AsioSerialPortManagerFactory [header](di_factory/serial_port_manager_factories/asio_serial_port_manager_factory/include/AsioSerialPortManagerFactory.h) & [implementation](di_factory/serial_port_manager_factories/asio_serial_port_manager_factory/src/AsioSerialPortManagerFactory.cpp)
+
+The `SerialPortManagerFactory` pure abstract class "promises" its children to return a child/specialization of the (also abstract) `SerialPortManager`.
+
+```cpp
+class AsioSerialPortManagerFactory : public SerialPortManagerFactory
+{
+public:
+    std::unique_ptr<SerialPortManager> get(std::filesystem::path serialDevice,
+                                           int baudRate) const override;
+};
+```
+
+Unsurprisingly, `AsioSerialPortManagerFactory` returns an `AsioSerialPortManager` instance.
+
+```cpp
+std::unique_ptr<SerialPortManager>
+AsioSerialPortManagerFactory::get(std::filesystem::path serialDevice,
+                                  int baudRate) const
+{
+    return std::make_unique<AsioSerialPortManager>(serialDevice, baudRate);
+}
+```
+
+### [CameraPowerController.cpp](di_factory/camera_power_controller/src/CameraPowerController.cpp)
+
+Our `CameraPowerController` class maintains ownership of the resources needed for the instantiation of its dependency but
+no longer *depends* on it. Instead, it depends on the abstraction (i.e. `SerialPortManager`) returned by the `get` call.
+
+```cpp
+CameraPowerController::CameraPowerController(
+    SerialPortManagerFactory* serialPortManagerFactory,
+    ProductVariant productVariant)
+{
+    switch (productVariant)
+    {
+    case ProductVariant::A:
+        mSerialPortManager = serialPortManagerFactory->get(
+            kSerialDevicePathForVariantA, kBaudRateForVariantA);
+        return;
+    case ProductVariant::B:
+        mSerialPortManager = serialPortManagerFactory->get(
+            kSerialDevicePathForVariantB, kBaudRateForVariantB);
+        return;
+    default:
+        throw std::logic_error("Unknown variant");
+    }
+}
+```
+
 ## Link time switching
 
+Occasionally it may not be feasible or practical to refactor existing code but you still wish to break the coupling between
+the implementation and its dependencies. What you can do, is continue depending on the same declarations during compile time but "replace" the definitions of your dependencies when linking.
+
+Since your code still depends on the same exposed functions and types, you do not need to change it. Instead, when linking you can provide an alternative implementation (e.g. a mock). This time, the "magic" happens on the configuration level.
+
+### Coupled configuration
+
+```cmake
+# CameraPowerController
+add_library(camera_power_controller src/CameraPowerController.cpp)
+
+target_include_directories(camera_power_controller PUBLIC include)
+
+target_link_libraries(camera_power_controller
+        PUBLIC
+        asio_serial_port_manager
+        product_variant
+        )
+```
+
+```cmake
+# src_main
+add_executable(src_main main.cpp)
+target_link_libraries(src_main
+        PRIVATE
+        camera_power_controller
+        )
+```
+
+On a *configuration* level our `camera_power_controller` target is tightly coupled to the `asio_serial_port_manager` one.
+No matter what we do on the code level, we will be pulling in the dependency.
+
+### Decoupled configuration
+
+```cpp
+target_include_directories(link_switch_camera_power_controller PUBLIC include)
+
+target_link_libraries(link_switch_camera_power_controller
+        PUBLIC
+        asio_serial_port_manager_interface
+        product_variant
+        )
+```
+
+To break the dependency to the `asio_serial_port_manager` target, we instead depend on the
+`asio_serial_port_manager_interface` which only includes the header files necessary. This means that compilation will work as before.
+However, we still need the *actual* definitions during linking to build a binary. The definitions will be supplied in the integration
+scope, i.e. the target that builds the executable.
+
+```cpp
+# src_main
+add_executable(link_switch_main link_switch_main.cpp)
+target_link_libraries(link_switch_main
+        PRIVATE
+        link_switch_camera_power_controller
+        asio_serial_port_manager
+        )
+```
+
+The `link_switch_main` target, as the one that creates the executable, is responsible for bringing everything together and making sure that the necessary resources are available for linking. *This* is eventually the target that depends on
+`asio_serial_port_manager`.
+
+After decoupling, you can provide alternative implementations for the dependencies that will run on different platforms,
+e.g. during unit tests. Check out how we would now test `CameraPowerController`:
+
+* [Test configuration](link_switch/test/CMakeLists.txt)
+* [Mock](link_switch/test/mocks/MockAsioSerialPortManager.h)
+* [Alternative `AsioSerialPortManager` implementation](link_switch/test/mocks/AsioSerialPortManager.cpp) that statically
+invokes the mocks.
+
 ## Link time switching (Templatized)
+
+Another way to replace dependencies is with a class template. Particularly, turn `CameraPowerController` into one.
+
+### [CameraPowerController.h](link_switch_template/camera_power_controller/include/CameraPowerController.h)
+
+```cpp
+template<typename SerialPortManager>
+class CameraPowerController
+{
+public:
+    CameraPowerController(ProductVariant productVariant)
+    {
+        switch (productVariant)
+        {
+        case ProductVariant::A:
+        {
+            const std::filesystem::path kSerialDevicePathForVariantA{
+                "/dev/CoolCompanyDevice"};
+            const auto kBaudRateForVariantA = 9600;
+            mSerialPortManager = std::make_unique<SerialPortManager>(
+                kSerialDevicePathForVariantA, kBaudRateForVariantA);
+        }
+            return;
+        case ProductVariant::B:
+        {
+            const std::filesystem::path kSerialDevicePathForVariantB{"COM3"};
+            const auto kBaudRateForVariantB = 115200;
+            mSerialPortManager = std::make_unique<SerialPortManager>(
+                kSerialDevicePathForVariantB, kBaudRateForVariantB);
+        }
+            return;
+        default:
+            throw std::logic_error("Unknown variant");
+        }
+    }
+
+    void turnOffCamera()
+    {
+        mSerialPortManager->asioWrite("OFF");
+    }
+
+private:
+    std::unique_ptr<SerialPortManager> mSerialPortManager;
+};
+```
+
+`CameraPowerController` is not coupled to the implementation of `AsioSerialPortManager` but something that behaves exactly
+like one. This means we can create variants by using a different type during the `CameraPowerController` instantiation.
+
+For the unit tests, we follow a similar approach to the other "link switch" method.
