@@ -37,7 +37,8 @@ refactored example you will find the unit tests that accompany it.
 
 ## Tightly coupled code example
 
-Here is some typical code that is coupled with its dependencies.
+Here is some typical code that is coupled with its dependencies. It will be refactored
+to demonstrate the different ways you can decouple troublesome code.
 
 ### [CameraPowerController.h](src/camera_power_controller/include/CameraPowerController.h)
 
