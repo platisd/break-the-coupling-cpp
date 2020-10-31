@@ -224,7 +224,8 @@ int main()
 ## Dependency Injection (Templatized)
 
 If many levels of indirection and `virtual` functions are not desirable (e.g. due to strict requirements on performance)
-then injecting your dependencies via the constructor is still the way to go. However, this time you will not use a class hierarchy. Instead, you can use a *class template* to determine the type of the constructor argument.
+then injecting your dependencies via the constructor is still the way to go. However, this time you will not use a class hierarchy.
+Instead, you can use a *class template* to determine the type of the constructor argument.
 
 This allows for a looser coupling that is determined by the one that instantiates the class and not the class itself.
 
@@ -363,9 +364,11 @@ CameraPowerController::CameraPowerController(
 ## Link time switching
 
 Occasionally it may not be feasible or practical to refactor existing code but you still wish to break the coupling between
-the implementation and its dependencies. What you can do, is continue depending on the same declarations during compile time but "replace" the definitions of your dependencies when linking.
+the implementation and its dependencies. What you can do, is continue depending on the same *declarations* during compile time
+but "replace" the *definitions* of your dependencies when linking.
 
-Since your code still depends on the same exposed functions and types, you do not need to change it. Instead, when linking you can provide an alternative implementation (e.g. a mock). This time, the "magic" happens on the configuration level.
+Since your code still depends on the same exposed functions and types, you do not need to change it. Instead, when linking you
+can provide an alternative implementation (e.g. a mock). This time, the "magic" happens on the configuration level.
 
 ### Coupled configuration
 
@@ -421,8 +424,8 @@ target_link_libraries(link_switch_main
         )
 ```
 
-The `link_switch_main` target, as the one that creates the executable, is responsible for bringing everything together and making sure that the necessary resources are available for linking. *This* is eventually the target that depends on
-`asio_serial_port_manager`.
+The `link_switch_main` target, as the one that creates the executable, is responsible for bringing everything together and making
+sure that the necessary resources are available for linking. *This* is eventually the target that depends on `asio_serial_port_manager`.
 
 After decoupling, you can provide alternative implementations for the dependencies that will run on different platforms,
 e.g. during unit tests. Check out how we would now test `CameraPowerController`:
