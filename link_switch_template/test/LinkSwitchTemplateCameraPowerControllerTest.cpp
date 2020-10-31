@@ -1,10 +1,9 @@
-#include <memory>
-
+#include "AsioSerialPortManager.h"
 #include "CameraPowerController.h"
 #include "MockAsioSerialPortManager.h"
-#include "AsioSerialPortManager.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include <memory>
 
 namespace
 {
