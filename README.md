@@ -34,6 +34,7 @@ refactored example you will find the unit tests that accompany it.
   - [Decoupled configuration](#decoupled-configuration)
 - [Link time switching (Templatized)](#link-time-switching-templatized)
   - [CameraPowerController.h](#camerapowercontrollerh-3)
+- [YouTube](#youtube)
 
 ## Tightly coupled code example
 
@@ -486,3 +487,8 @@ private:
 like one. This means we can create variants by using a different type during the `CameraPowerController` instantiation.
 
 For the unit tests, we follow a similar approach to the other "link switch" method.
+
+## YouTube
+
+This tutorial also exists as a [video on YouTube](https://www.youtube.com/watch?v=SRLVf6Ssx1s). Check it out and if you
+enjoyed it don't forget to comment, like and subscribe! 😊
