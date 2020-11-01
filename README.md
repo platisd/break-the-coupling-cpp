@@ -265,7 +265,7 @@ If there are really good reasons to give a class control over (some of) its reso
 instantiate its dependencies in the integration scope (e.g. a `main()` function) because they require some information
 that resides within the class that uses them.
 
-A good exmaple is the *original* `CameraPowerController` constructor:
+A good example is the *original* `CameraPowerController` constructor:
 
 ```cpp
 CameraPowerController::CameraPowerController(ProductVariant productVariant)
