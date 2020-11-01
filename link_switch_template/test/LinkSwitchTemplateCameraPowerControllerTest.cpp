@@ -29,6 +29,8 @@ TEST_F(CameraPowerControllerConstructorTest,
     EXPECT_CALL(mAsioSerialPortManager,
                 AsioSerialPortManager(kSerialDevicePathForVariantA,
                                       kBaudRateForVariantA));
+    // AsioSerialPortManager here comes from the mock_asio_serial_port_manager
+    // target, i.e. it's not the "real" one!
     CameraPowerController<AsioSerialPortManager> mCameraPowerController{
         ProductVariant::A};
 }
