@@ -436,7 +436,7 @@ e.g. during unit tests. Check out how we would now test `CameraPowerController`:
 * [Alternative `AsioSerialPortManager` implementation](link_switch/test/mocks/AsioSerialPortManager.cpp) that statically
 invokes the mocks.
 
-## Link time switching (Templatized)
+## Compile time switching
 
 Another way to replace dependencies is with a class template. Particularly, turn `CameraPowerController` into one.
 
